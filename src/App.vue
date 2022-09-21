@@ -1,12 +1,20 @@
 <template>
-  <router-view></router-view>
+  <component :is="layout">
+    <router-view />
+  </component>
 </template>
 
 <script>
+  const defaultLayout = 'default'
   export default {
+    computed: {
+      layout() {
+        return (this.$route.meta.layout || defaultLayout) + '-layout'
+      }
+    },
     watch: {
     $route(to) {
-      document.title = to.meta.title || "AAA-C Admin Portal";
+      document.title = to.meta.title || "Canteen Web POS";
     },
   },
   }
