@@ -36,7 +36,8 @@
                     <!-- item cards -->
                     <div class="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
                         <template v-for="item in category.items" :key="item.id">
-                            <div class="group bg-white rounded-xl pb-2 cursor-pointer select-none">
+                            <div @click="handleAddToCart(item)"
+                                class="group bg-white rounded-xl pb-2 cursor-pointer select-none">
                                 <img :src="item.image" class="rounded-t-xl object-contain" alt="">
                                 <div class="px-2">
                                     <p class="text-md text-gray font-light group-hover:text-blue">{{item.name}}</p>
@@ -171,6 +172,14 @@ export default {
 
             window.scrollTo(0, top);
         },
+        handleAddToCart(item) {
+            this.$store.commit("addItem", item);
+        },
+        itemKeys() {
+            alert(JSON.stringify(this.$store.getters.itemKeys));
+            this.$store.commit('empty')
+            this.cart = this.$store.getters.cart;
+        }
     }
 }
 </script>
