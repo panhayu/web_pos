@@ -1,6 +1,6 @@
 <template>
     <div class="text-left">
-      <label class="text-gray label-text font-thin"> {{ label }}</label>
+      <label class="text-gray label-text font-light"> {{ label }}</label>
       <div class="input-container">
         <input
           :class="[isWhiteBackground ? 'input-field-white' : 'input-field']"
