@@ -10,20 +10,24 @@
             <div class="border-b border-light-gray"></div>
         </div>
         <!-- items in cart -->
-        <div class="my-2">
+        <div class="my-2 overflow-y-hidden">
             <template v-for="item in itemsInCart" :key="item.id">
                 <div class="flex justify-between mb-4">
                     <!-- item detail -->
                     <div class="flex">
-                        <img :src="item.image" class=" w-20 object-cover rounded-md" alt="" />
+                        <img v-if="item.image" :src="item.image" class=" w-20 object-cover rounded-md square-img" alt="" />
+                        <img v-else :src="defaultImage" class=" w-20 object-cover rounded-md square-img" alt="" />
                         <div class="pl-4">
                             <p class="font-light text-md">{{item.name}}</p>
                         </div>
                     </div>
                     <!-- price -->
                     <div class="flex flex-col items-end justify-between">
-                        <p class="text-lg text-blue font-bold">
+                        <p v-if="item.price" class="text-lg text-blue font-bold">
                             $ {{parseFloat(item.price).toFixed(2)}}
+                        </p>
+                        <p v-else>
+                            $ {{parseFloat(0).toFixed(2)}}
                         </p>
                         <!-- qty controller -->
                         <div class="flex flex-row items-center justify-between">
@@ -100,6 +104,7 @@ export default {
     },
     data() {
         return {
+            defaultImage: 'https://theme-assets.getbento.com/sensei/5a38345.sensei/assets/images/catering-item-placeholder-704x520.png',
             paymentMethods: [
                 {
                     id: '1',
@@ -127,6 +132,7 @@ export default {
     methods: {
         handleClarCart() {
             this.itemsInCart = [];
+            this.$store.commit('empty');
         },
         handlePlaceOrder() {
             alert('Check Out')
@@ -136,7 +142,8 @@ export default {
         },
         handleIncrease(event) {
             alert(event)
-        }
+        },
+
     },
     computed: {
         calulateTotal() {
@@ -164,5 +171,7 @@ export default {
 </script>
 
 <style scoped>
-
+.square-img {
+    aspect-ratio: 1/1;
+}
 </style>

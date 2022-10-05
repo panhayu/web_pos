@@ -8,30 +8,31 @@ export const cart = {
             state.cartKeys = keys;
         },
         addItem(state, newItem) {
-            let found = -1;
-            for (const cartIndex in state.cartItems) {
-                const item = state.cartItems[cartIndex];
-                let allMatch = true;
-                for (const keyIndex in state.cartKeys) {
-                    const keyValue = state.cartKeys[keyIndex];
-                    if (item[keyValue] != newItem[keyValue]) {
-                        allMatch = false;
-                        break;
-                    }
-                }
-                if (allMatch == true) {
-                    found = cartIndex;
-                    break;
-                }
-            }
-            if (found > -1) {
-                state.cartItems[found].quantity += newItem.quantity || 1;
-            } else {
-                if (newItem['quantity'] == undefined) {
-                    newItem.quantity = 1;
-                }
-                state.cartItems.push(newItem);
-            }
+            state.cartItems.push(newItem);
+            // let found = -1;
+            // for (const cartIndex in state.cartItems) {
+            //     const item = state.cartItems[cartIndex];
+            //     let allMatch = true;
+            //     for (const keyIndex in state.cartKeys) {
+            //         const keyValue = state.cartKeys[keyIndex];
+            //         if (item[keyValue] != newItem[keyValue]) {
+            //             allMatch = false;
+            //             break;
+            //         }
+            //     }
+            //     if (allMatch == true) {
+            //         found = cartIndex;
+            //         break;
+            //     }
+            // }
+            // if (found > -1) {
+            //     state.cartItems[found].quantity += newItem.quantity || 1;
+            // } else {
+            //     if (newItem['quantity'] == undefined) {
+            //         newItem.quantity = 1;
+            //     }
+            //     state.cartItems.push(newItem);
+            // }
         },
         delItem(state, params) {
             let found = -1;
