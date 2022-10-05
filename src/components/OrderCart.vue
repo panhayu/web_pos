@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full min-h-screen flex flex-col content-between sticky top-0 p-8">
+    <div v-if="!proccedCheckOut" class="w-full min-h-screen flex flex-col content-between sticky top-0 p-8">
         <div class="header">
             <div class="flex flex-row justify-between items-center pb-4">
                 <h1 class="text-2xl text-black font-bold">Current Order</h1>
@@ -15,7 +15,8 @@
                 <div class="flex justify-between mb-4">
                     <!-- item detail -->
                     <div class="flex">
-                        <img v-if="item.image" :src="item.image" class=" w-20 object-cover rounded-md square-img" alt="" />
+                        <img v-if="item.image" :src="item.image" class=" w-20 object-cover rounded-md square-img"
+                            alt="" />
                         <img v-else :src="defaultImage" class=" w-20 object-cover rounded-md square-img" alt="" />
                         <div class="pl-4">
                             <p class="font-light text-md">{{item.name}}</p>
@@ -48,20 +49,6 @@
             </div>
         </div>
         <div class="bottom mt-auto">
-            <!-- payment method card -->
-            <div class="payment my-4">
-                <p class="text-md text-gray font-thin">
-                    Payment Method
-                </p>
-                <RadioGroup class="flex flex-row space-x-2 my-2 w-full" v-model="selectedPayment">
-                    <template v-for="payment in paymentMethods" :key="payment.id">
-                        <RadioGroupOption v-slot="{ checked }" :value="payment" class="w-full">
-                            <span :class='checked ? "bg-light-blue text-blue" : "text-gray bg-light-gray"'
-                                class="block w-full text-sm font-medium p-4 rounded-lg cursor-pointer text-center select-none">{{payment.name}}</span>
-                        </RadioGroupOption>
-                    </template>
-                </RadioGroup>
-            </div>
             <!-- summary card -->
             <div class="w-full p-4 bg-light-gray rounded-md my-4">
                 <div class="flex flex-row justify-between">
@@ -80,6 +67,41 @@
             </BaseButton>
         </div>
     </div>
+    <div v-else class="w-full min-h-screen flex flex-col content-between sticky top-0 p-8">
+        <!-- header -->
+        <div class="header">
+            <div class="flex flex-row justify-between items-center pb-4">
+                <h1 class="text-2xl text-black font-bold">Procced Order</h1>
+            </div>
+            <div class="border-b border-light-gray"></div>
+        </div>
+        <!-- bottom -->
+        <div class="bottom mt-auto">
+            <!-- payment method card -->
+            <div class="payment my-4">
+                <p class="text-md text-gray font-thin">
+                    Payment Method
+                </p>
+                <RadioGroup class="w-full space-y-2 my-2 " v-model="selectedPayment">
+                    <template v-for="payment in paymentMethods" :key="payment.id">
+                        <RadioGroupOption v-slot="{ checked }" :value="payment" class="w-full">
+                            <span :class='checked ? "bg-light-blue text-blue" : "text-gray bg-light-gray"'
+                                class="block w-full text-sm font-medium p-4 rounded-lg cursor-pointer text-center select-none">{{payment.name}}</span>
+                        </RadioGroupOption>
+                    </template>
+                </RadioGroup>
+            </div>
+            <!-- place order button -->
+            <div class="space-y-4">
+                <BaseButton class="w-full">
+                    <p>Place Order</p>
+                </BaseButton>
+                <BaseButton class="w-full">
+                    <p>Print Reciept</p>
+                </BaseButton>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -90,6 +112,7 @@ import {
     RadioGroupLabel,
     RadioGroupOption,
 } from '@headlessui/vue'
+import userService from '../services/user.service';
 export default {
     name: 'OrderCart',
     components: {
@@ -105,28 +128,11 @@ export default {
     data() {
         return {
             defaultImage: 'https://theme-assets.getbento.com/sensei/5a38345.sensei/assets/images/catering-item-placeholder-704x520.png',
-            paymentMethods: [
-                {
-                    id: '1',
-                    name: 'Cash'
-                },
-                {
-                    id: '2',
-                    name: 'ABA PAY'
-                },
-                {
-                    id: '3',
-                    name: 'ACLEDA'
-                },
-            ],
-            selectedPayment: [
-                {
-                    id: '1',
-                    name: 'Cash'
-                },
-            ],
+            paymentMethods: [],
+            selectedPayment: [],
             itemsInCart: this.cart = this.$store.getters.cart,
             total: 0,
+            proccedCheckOut: false,
         }
     },
     methods: {
@@ -134,8 +140,13 @@ export default {
             this.itemsInCart = [];
             this.$store.commit('empty');
         },
+        getPayment() {
+            userService.getPaymentMethods().then((response) => {
+                this.paymentMethods = response.data.data;
+            })
+        },
         handlePlaceOrder() {
-            alert('Check Out')
+            this.proccedCheckOut = true;
         },
         handleDecrease(event) {
             alert(event)
@@ -163,6 +174,7 @@ export default {
     },
     created() {
         this.$store.commit("cartKeys", this.cartKeys);
+        this.getPayment();
     },
     mounted() {
 

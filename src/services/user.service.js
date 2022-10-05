@@ -16,6 +16,10 @@ class UserService {
     getDineInTables() {
         return axios.get(API_URL + 'dining-tables', {headers: authHeader()})
     }
+
+    getPaymentMethods() { 
+        return axios.get(API_URL + 'payments', {headers: authHeader()})
+    }
 }
 
 export default new UserService();
