@@ -1,4 +1,5 @@
 <template>
+    <vue-progress-bar></vue-progress-bar>
     <div class="flex flex-row">
         <div class="w-1/12 bg-white"></div>
         <div class="w-8/12 bg-light-gray">
