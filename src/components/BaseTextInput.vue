@@ -3,7 +3,7 @@
       <label class="text-gray label-text font-light"> {{ label }}</label>
       <div class="input-container">
         <input
-          :class="[isWhiteBackground ? 'input-field-white' : 'input-field']"
+          :class="[isWhiteBackground ? 'input-field-white' : 'input-field', 'font-light']"
           :name="name"
           :type="type"
           :value="modelValue"
