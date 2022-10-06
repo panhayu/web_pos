@@ -1,14 +1,26 @@
 <template>
     <div class="p-8 space-y-8">
-        <div>
-            <h1 class="text-2xl font-bold">Dine-In Order</h1>
-            <div v-if="selectedTable" class="flex flex-row items-center space-x-2">
-                <p class="text-md text-gray font-light">Selecte or Choose Items for </p>
-                <p class="px-3 py-1 bg-blue text-white font-bold rounded-md">
-                    {{selectedTable.number}}
-                </p>
+        <div class="sticky top-0 backdrop-blur-md px-2 w-full">
+            <div>
+                <h1 class="text-2xl font-bold">Dine-In Order</h1>
+                <div v-if="selectedTable" class="flex flex-row items-center space-x-2">
+                    <p class="text-md text-gray font-light">Selecte or Choose Items for </p>
+                    <p class="px-3 py-1 bg-blue text-white font-bold rounded-md">
+                        {{selectedTable.number}}
+                    </p>
+                </div>
+                <p v-else class="text-md text-gray font-light">Selecte or Choose Table for Dine-In Order</p>
             </div>
-            <p v-else class="text-md text-gray font-light">Selecte or Choose Table for Dine-In Order</p>
+            <!-- category cards -->
+            <div v-show="selectedTable"
+                class="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 my-4 py-1">
+                <template v-for="category in itemsList" :key="category.id">
+                    <div class="group px-2 py-4 bg-white rounded-lg hover:bg-light-blue cursor-pointer"
+                        @click="goTo(category.name)">
+                        <p class="text-md font-light text-gray group-hover:text-blue">{{category.name}}</p>
+                    </div>
+                </template>
+            </div>
         </div>
         <!-- show table list -->
         <div v-if="!selectedTable" class="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
@@ -21,15 +33,6 @@
         </div>
         <!-- show item list upone table selected -->
         <div v-else class="space-y-8">
-            <!-- category cards -->
-            <div class="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
-                <template v-for="category in itemsList" :key="category.id">
-                    <div class="group px-2 py-4 bg-white rounded-lg hover:bg-light-blue cursor-pointer"
-                        @click="goTo(category.name)">
-                        <p class="text-md font-light text-gray group-hover:text-blue">{{category.name}}</p>
-                    </div>
-                </template>
-            </div>
             <template v-for="category in itemsList" :key="category.id">
                 <div :id="category.name" :ref="category.name">
                     <p class="text-xl text-gray font-light mb-6">{{category.name}}</p>
@@ -101,14 +104,8 @@ export default {
             this.$refs[category][0].scrollIntoView({ behavior: 'smooth' })
         },
         handleAddToCart(item) {
-            alert('Add to cart')
-            this.$store.commit("addItem", item);
-            console.log(this.$store.state.cart)
-        },
-        itemKeys() {
-            alert(JSON.stringify(this.$store.getters.itemKeys));
-            this.$store.commit('empty')
-            this.cart = this.$store.getters.cart;
+            this.$store.commit('addToCart', item)
+            console.log(this.$store.state.cart);
         }
     },
     created() {

@@ -3,7 +3,7 @@
         <div class="header">
             <div class="flex flex-row justify-between items-center pb-4">
                 <h1 class="text-2xl text-black font-bold">Current Order</h1>
-                <div class="group p-2 bg-light-gray rounded-md cursor-pointer hover:bg-red" @click="handleClarCart">
+                <div v-show="isEmptyCart" class="group p-2 bg-light-gray rounded-md cursor-pointer hover:bg-red" @click="handleClarCart">
                     <TrashIcon class="w-6 h-6 text-red group-hover:text-white" />
                 </div>
             </div>
@@ -32,13 +32,13 @@
                         </p>
                         <!-- qty controller -->
                         <div class="flex flex-row items-center justify-between">
-                            <div @click="handleDecrease(item.qty)" class="p-1 bg-blue rounded-md">
+                            <button @click="handleDecrease(item)" class="p-1 bg-blue rounded-md">
                                 <MinusIcon class="text-white w-4 h-4" />
-                            </div>
-                            <p class="text-blue text-lg font-bold px-4">{{item.qty}}</p>
-                            <div @click="handleIncrease(item.qty)" class="p-1 bg-blue rounded-md">
+                            </button>
+                            <p class="text-blue text-lg font-bold px-4">{{item.quantity}}</p>
+                            <button @click="handleIncrease(item)" class="p-1 bg-blue rounded-md">
                                 <PlusIcon class="text-white w-4 h-4" />
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -93,8 +93,8 @@
             </div>
             <!-- place order button -->
             <div class="space-y-4">
-                <BaseButton class="w-full">
-                    <p>Place Order</p>
+                <BaseButton class="w-full" @click="handleCheckOut">
+                    <p>Check out</p>
                 </BaseButton>
                 <BaseButton class="w-full">
                     <p>Print Reciept</p>
@@ -130,7 +130,6 @@ export default {
             defaultImage: 'https://theme-assets.getbento.com/sensei/5a38345.sensei/assets/images/catering-item-placeholder-704x520.png',
             paymentMethods: [],
             selectedPayment: [],
-            itemsInCart: this.cart = this.$store.getters.cart,
             total: 0,
             proccedCheckOut: false,
         }
@@ -148,15 +147,25 @@ export default {
         handlePlaceOrder() {
             this.proccedCheckOut = true;
         },
-        handleDecrease(event) {
-            alert(event)
+        handleDecrease(item) {
+            this.$store.commit('removeFromCart', item);
         },
-        handleIncrease(event) {
-            alert(event)
+        handleIncrease(item) {
+            this.$store.commit('addToCart', item)
         },
+        handleCheckOut() {
+            this.proccedCheckOut = false;
+            console.log(this.$store.getters.cart);
+            this.itemsInCart = [];
+            this.selectedPayment = '';
+            this.$store.commit('empty');
+        }
 
     },
     computed: {
+        itemsInCart() {
+            return this.$store.getters.cart;
+        },
         calulateTotal() {
             let total = 0;
             this.itemsInCart.forEach((item, index) => {
