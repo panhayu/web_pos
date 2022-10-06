@@ -1,6 +1,6 @@
 <template>
-    <div class="p-8 space-y-8">
-        <div class="sticky top-0 backdrop-blur-md px-2 w-full">
+    <div class="space-y-8">
+        <div class="sticky p-8 pb-0 top-0 backdrop-blur-lg  w-full">
             <div>
                 <h1 class="text-2xl font-bold">Dine-In Order</h1>
                 <div v-if="selectedTable" class="flex flex-row items-center space-x-2">
@@ -23,7 +23,7 @@
             </div>
         </div>
         <!-- show table list -->
-        <div v-if="!selectedTable" class="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
+        <div v-if="!selectedTable" class="p-8 grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
             <template v-for="table in tableList" :key='table.id'>
                 <div @click="handleSelect(table)"
                     class="group px-6 py-12 bg-white rounded-md cursor-pointer hover:bg-blue">
@@ -32,7 +32,7 @@
             </template>
         </div>
         <!-- show item list upone table selected -->
-        <div v-else class="space-y-8">
+        <div v-else class="p-8 space-y-8">
             <template v-for="category in itemsList" :key="category.id">
                 <div :id="category.name" :ref="category.name">
                     <p class="text-xl text-gray font-light mb-6">{{category.name}}</p>

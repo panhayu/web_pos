@@ -3,7 +3,8 @@
         <div class="header">
             <div class="flex flex-row justify-between items-center pb-4">
                 <h1 class="text-2xl text-black font-bold">Current Order</h1>
-                <div v-show="isEmptyCart" class="group p-2 bg-light-gray rounded-md cursor-pointer hover:bg-red" @click="handleClarCart">
+                <div v-show="isEmptyCart" class="group p-2 bg-light-gray rounded-md cursor-pointer hover:bg-red"
+                    @click="handleClarCart">
                     <TrashIcon class="w-6 h-6 text-red group-hover:text-white" />
                 </div>
             </div>
@@ -15,9 +16,9 @@
                 <div class="flex justify-between mb-4">
                     <!-- item detail -->
                     <div class="flex">
-                        <img v-if="item.image" :src="item.image" class=" w-20 object-cover rounded-md square-img"
+                        <img v-if="item.image" :src="item.image" class=" w-16 object-cover rounded-md square-img"
                             alt="" />
-                        <img v-else :src="defaultImage" class=" w-20 object-cover rounded-md square-img" alt="" />
+                        <img v-else :src="defaultImage" class=" w-16 object-cover rounded-md square-img" alt="" />
                         <div class="pl-4">
                             <p class="font-light text-md">{{item.name}}</p>
                         </div>
@@ -42,6 +43,7 @@
                         </div>
                     </div>
                 </div>
+                <div v-show="cartLength > 1" class="border-b border-light-gray mb-2 "></div>
             </template>
             <div v-if="itemsInCart.length == '0'" class="p-4 my-4 bg-light-gray rounded-md flex items-center">
                 <ShoppingCartIcon class="w-8 h-8 text-gray mr-4" />
@@ -165,6 +167,9 @@ export default {
     computed: {
         itemsInCart() {
             return this.$store.getters.cart;
+        },
+        cartLength() {
+            return this.$store.getters.cart.length;
         },
         calulateTotal() {
             let total = 0;
