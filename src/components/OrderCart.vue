@@ -12,7 +12,7 @@
         </div>
         <!-- items in cart -->
         <div class="my-2 overflow-y-hidden">
-            <template v-for="item in itemsInCart" :key="item.id">
+            <template v-for="item in itemsInCart" :key="item.item_id">
                 <div class="flex justify-between mb-4">
                     <!-- item detail -->
                     <div class="flex">
@@ -20,7 +20,7 @@
                             alt="" />
                         <img v-else :src="defaultImage" class=" w-16 object-cover rounded-md square-img" alt="" />
                         <div class="pl-4">
-                            <p class="font-light text-md">{{item.name}}</p>
+                            <p class="font-light text-md">{{item.item_name}}</p>
                         </div>
                     </div>
                     <!-- price -->
@@ -77,6 +77,9 @@
             </div>
             <div class="border-b border-light-gray"></div>
         </div>
+        <div>
+            <BaseTextInput v-model="note" name="note" label="Order Note" class="w-full my-4" />
+        </div>
         <!-- bottom -->
         <div class="bottom mt-auto">
             <!-- payment method card -->
@@ -115,6 +118,7 @@ import {
     RadioGroupOption,
 } from '@headlessui/vue'
 import userService from '../services/user.service';
+import BaseTextInput from './BaseTextInput.vue';
 export default {
     name: 'OrderCart',
     components: {
@@ -126,6 +130,7 @@ export default {
         RadioGroup,
         RadioGroupLabel,
         RadioGroupOption,
+        BaseTextInput
     },
     data() {
         return {
@@ -134,6 +139,7 @@ export default {
             selectedPayment: [],
             total: 0,
             proccedCheckOut: false,
+            note: '',
         }
     },
     methods: {
@@ -156,11 +162,32 @@ export default {
             this.$store.commit('addToCart', item)
         },
         handleCheckOut() {
-            this.proccedCheckOut = false;
-            console.log(this.$store.getters.cart);
-            this.itemsInCart = [];
-            this.selectedPayment = '';
-            this.$store.commit('empty');
+            this.$Progress.start()
+            let formData = new FormData();
+            formData.append('note', this.note);
+            formData.append('payment_id', this.selectedPayment.id);
+            formData.append('total', 3);
+            formData.append("order_channel_id", "3b696cbc-10ef-14ed-a261-0242ac120002");
+            formData.append("order_status_id", "3b696cbc-10ef-14ed-a261-0242ac120002")
+            this.itemsInCart.forEach((item, index) => {
+                formData.append(`items[${index}][item_id]`, item.id);
+                formData.append(`items[${index}][item_name]`, item.name);
+                formData.append(`items[${index}][size_id]`, item.size_id);
+                formData.append(`items[${index}][size_name]`, item.size_name);
+                formData.append(`items[${index}][quantity]`, item.quantity);
+                formData.append(`items[${index}][price]`, item.price);
+            })
+        
+            userService.storeOrder(formData).then((response) => {
+                this.$Progress.finish()
+                this.proccedCheckOut = false;
+                this.itemsInCart = [];
+                this.selectedPayment = '';
+                this.$store.commit('empty');
+            }).catch((error) => {
+                this.$Progress.fail()
+                console.log(error);
+            })
         }
 
     },

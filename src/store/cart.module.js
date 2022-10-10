@@ -28,10 +28,12 @@ export const cart = {
                 found.quantity++;
             } else {
                 state.cartItems.push({
-                    id: item.id,
-                    name: item.name,
-                    image: item.image,
+                    item_id: item.id,
+                    item_name: item.name,
+                    item_image: item.image,
                     price: item.price,
+                    size_id: "3b696cbc-10ef-11ed-a261-0242ac120002",
+                    size_name: 'Small',
                     quantity: 1
                 });
             }

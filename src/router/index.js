@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import store from '../store'
 import DineInOrder from '../views/DineInOrder.vue'
+import TakeAwayOrder from '../views/TakeAwayOrder.vue'
 
 const routes = [
     {
@@ -24,7 +25,14 @@ const routes = [
       beforeEnter: projecteRoute,
       component: DineInOrder,
       meta: {requiresAuth: true, title: 'POS - Dine In Order', layout: 'default'}
-    }
+  },
+  {
+    path: '/take_away_order',
+    name: 'TakeAwayOrder',
+    beforeEnter: projecteRoute,
+    component: TakeAwayOrder,
+    meta: {requiresAuth: true, title: 'POS - Take Away Order', layout: 'default'}
+  }
 ]
 
 const router = createRouter({
