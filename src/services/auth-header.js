@@ -1,8 +1,8 @@
 export default function autheader() {
     let user = JSON.parse(localStorage.getItem('user'))
 
-    if (user && user.access_token) {
-        return { Authorization: 'Bearer ' + user.access_token };
+    if (user && user.data.token) {
+        return { Authorization: 'Bearer ' + user.data.token };
     }
     else {
         return {}
