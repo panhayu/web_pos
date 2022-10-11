@@ -105,7 +105,6 @@ export default {
         },
         handleAddToCart(item) {
             this.$store.commit('addToCart', item)
-            console.log(this.$store.state.cart);
         }
     },
     created() {

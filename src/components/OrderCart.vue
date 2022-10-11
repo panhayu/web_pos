@@ -211,6 +211,10 @@ export default {
             } else {
                 return true
             }
+        },
+        handlePrintReciept() {
+            alert('print reciept')
+            // this.$router.push('/print_reciept')
         }
     },
     created() {
