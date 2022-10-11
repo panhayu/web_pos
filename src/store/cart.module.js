@@ -1,6 +1,6 @@
 export const cart = {
     state: {
-        cartItems: []
+        cartItems: JSON.parse(localStorage.getItem('cartItems')) || [],
     },
     getters: {
         itemCount: state => {
@@ -37,6 +37,7 @@ export const cart = {
                     quantity: 1
                 });
             }
+            this.commit('saveCart');
         },
         removeFromCart(state, params) {
             let found = state.cartItems.find(cartItem => cartItem.id === params.id);
@@ -47,9 +48,14 @@ export const cart = {
                     state.cartItems = state.cartItems.filter(cartItem => cartItem.id !== params.id);
                 }
             }
+            this.commit('saveCart');
         },
         empty(state) {
             state.cartItems = [];
-        }
+            this.commit('saveCart');
+        },
+        saveCart(state) {
+            localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
+        },
     },
 }
