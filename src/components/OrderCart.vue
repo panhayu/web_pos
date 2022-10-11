@@ -74,6 +74,10 @@
         <div class="header">
             <div class="flex flex-row justify-between items-center pb-4">
                 <h1 class="text-2xl text-black font-bold">Procced Order</h1>
+                <div class="group p-2 bg-light-gray rounded-md cursor-pointer hover:bg-blue"
+                    @click="handleBack">
+                    <ArrowLeftIcon class="w-6 h-6 text-gray group-hover:text-white" />
+                </div>
             </div>
             <div class="border-b border-light-gray"></div>
         </div>
@@ -111,7 +115,7 @@
 </template>
 
 <script>
-import { TrashIcon, ShoppingCartIcon, PlusIcon, MinusIcon } from '@heroicons/vue/24/outline'
+import { TrashIcon, ShoppingCartIcon, PlusIcon, MinusIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline'
 import BaseButton from './BaseButton.vue';
 import {
     RadioGroup,
@@ -131,7 +135,8 @@ export default {
         RadioGroup,
         RadioGroupLabel,
         RadioGroupOption,
-        BaseTextInput
+        BaseTextInput,
+        ArrowLeftIcon
     },
     data() {
         return {
@@ -189,8 +194,13 @@ export default {
                 this.$Progress.fail()
                 console.log(error);
             })
+        },
+        handlePrintReceipt() {
+            this.$router.push('/print_reciept')
+        },
+        handleBack() { 
+            this.proccedCheckOut = !this.proccedCheckOut;
         }
-
     },
     computed: {
         itemsInCart() {
@@ -220,10 +230,6 @@ export default {
                 return true
             }
         },
-        handlePrintReceipt() {
-            alert('print reciept')
-            // this.$router.push('/print_reciept')
-        }
     },
     created() {
         this.$store.commit("cartKeys", this.cartKeys);

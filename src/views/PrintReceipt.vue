@@ -18,18 +18,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in items" :key="item.id">
+                        <tr v-for="(item, index) in itemsInCart" :key="item.id">
                             <td class="py-1">{{index+1}}</td>
-                            <td class="py-1">{{item.item_name}}</td>
+                            <td class="py-1">{{item.name}}</td>
                             <td class="py-1 text-center">{{item.quantity}}</td>
                             <td class="py-1 text-right">{{parseFloat(item.price).toFixed(2)}}</td>
                         </tr>
                         <tr class="border-t border-dashed border-gray">
-                            <td colspan="3" class="text-right">Total</td>
-                            <td class="text-right">$ 3.00</td>
+                            <td colspan="3" class="text-right py-2">Total</td>
+                            <td class="text-right py-2">{{parseFloat(calulateTotal).toFixed(2)}}</td>
                         </tr>
                     </tbody>
                 </table>
+                <p class="small-text text-center my-4 font-light">Thank you for you purchase!</p>
             </div>
         </div>
         <BaseButton @click="handlePrint" class="w-1/4 mt-auto hidden-print">Print Reciept</BaseButton>
@@ -44,30 +45,24 @@ export default {
     data() {
         return {
             logo: 'https://www.cadt.edu.kh/wp-content/uploads/2022/09/CADT-Masterbrand-Logos-Navy_CADT-Lockup-2-English.png',
-            items: [
-                {
-                    "item_id": "3b696cbc-10ef-11ed-a261-0242ac120000",
-                    "size_id": "3b696cbc-10ef-14ed-a261-0242ac120002",
-                    "item_name": "item 1",
-                    "size_name": "Large",
-                    "quantity": "1",
-                    "price": "1.50"
-                },
-                {
-                    "item_id": "3b696cbc-10ef-11ed-a261-0242ac120000",
-                    "size_id": "3b696cbc-10ef-11ed-a261-0242ac120002",
-                    "item_name": "item 4",
-                    "size_name": "Small",
-                    "quantity": "1",
-                    "price": "0.50"
-                }
-            ]
         }
     },
     methods: {
         handlePrint() {
             window.print();
         }
+    },
+    computed: {
+        itemsInCart() {
+            return this.$store.getters.cart;
+        },
+        calulateTotal() {
+            let total = 0;
+            this.itemsInCart.forEach((item, index) => {
+                total += item.price * item.qty
+            });
+            return total
+        },
     },
     created() { },
     mounted() { },
