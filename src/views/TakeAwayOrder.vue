@@ -57,17 +57,6 @@ export default {
         return {
             params: new URLSearchParams(),
             defaultImage: 'https://theme-assets.getbento.com/sensei/5a38345.sensei/assets/images/catering-item-placeholder-704x520.png',
-            tableList: [
-                { id: '1', name: 'A01' },
-                { id: '2', name: 'A02' },
-                { id: '3', name: 'A03' },
-                { id: '4', name: 'A04' },
-                { id: '5', name: 'A05' },
-                { id: '6', name: 'A06' },
-                { id: '7', name: 'A07' },
-                { id: '8', name: 'A08' },
-            ],
-            selectedTable: '',
             itemsList: [],
         }
     },

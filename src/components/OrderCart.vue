@@ -12,7 +12,7 @@
         </div>
         <!-- items in cart -->
         <div class="my-2 overflow-y-hidden">
-            <template v-for="item in itemsInCart" :key="item.item_id">
+            <template v-for="item in itemsInCart" :key="item.id">
                 <div class="flex justify-between mb-4">
                     <!-- item detail -->
                     <div class="flex">
@@ -20,7 +20,7 @@
                             alt="" />
                         <img v-else :src="defaultImage" class=" w-16 object-cover rounded-md square-img" alt="" />
                         <div class="pl-4">
-                            <p class="font-light text-md">{{item.item_name}}</p>
+                            <p class="font-light text-md">{{item.name}}</p>
                         </div>
                     </div>
                     <!-- price -->
@@ -79,30 +79,31 @@
         </div>
         <div>
             <BaseTextInput v-model="note" name="note" label="Order Note" class="w-full my-4" />
-        </div>
-        <!-- bottom -->
-        <div class="bottom mt-auto">
             <!-- payment method card -->
             <div class="payment my-4">
-                <p class="text-md text-gray font-thin">
+                <p class="text-md text-gray font-light">
                     Payment Method
                 </p>
-                <RadioGroup class="w-full space-y-2 my-2 " v-model="selectedPayment">
+                <RadioGroup class="w-full grid grid-cols-1 md:grid-cols-2" v-model="selectedPayment">
                     <template v-for="payment in paymentMethods" :key="payment.id">
-                        <RadioGroupOption v-slot="{ checked }" :value="payment" class="w-full">
+                        <RadioGroupOption v-slot="{ checked }" :value="payment" class="w-full pr-2 pb-1 pt-1">
                             <span :class='checked ? "bg-light-blue text-blue" : "text-gray bg-light-gray"'
                                 class="block w-full text-sm font-medium p-4 rounded-lg cursor-pointer text-center select-none">{{payment.name}}</span>
                         </RadioGroupOption>
                     </template>
                 </RadioGroup>
             </div>
+        </div>
+        <!-- bottom -->
+        <div class="bottom mt-auto">
+            <div class="border-b border-light-gray"></div>
             <!-- place order button -->
-            <div class="space-y-4">
-                <BaseButton class="w-full" @click="handleCheckOut">
-                    <p>Check out</p>
-                </BaseButton>
-                <BaseButton class="w-full">
+            <div class="space-x-2 flex pt-4">
+                <BaseButton @click="handlePrintReceipt" :isSecondary="true" class="w-2/4">
                     <p>Print Reciept</p>
+                </BaseButton>
+                <BaseButton class="w-2/4" :disabled="!isPaymentSelected" @click="handleCheckOut">
+                    <p>Check out</p>
                 </BaseButton>
             </div>
         </div>
@@ -177,7 +178,7 @@ export default {
                 formData.append(`items[${index}][quantity]`, item.quantity);
                 formData.append(`items[${index}][price]`, item.price);
             })
-        
+
             userService.storeOrder(formData).then((response) => {
                 this.$Progress.finish()
                 this.proccedCheckOut = false;
@@ -212,7 +213,14 @@ export default {
                 return true
             }
         },
-        handlePrintReciept() {
+        isPaymentSelected() {
+            if (this.selectedPayment.length == !'0') {
+                return false
+            } else {
+                return true
+            }
+        },
+        handlePrintReceipt() {
             alert('print reciept')
             // this.$router.push('/print_reciept')
         }
