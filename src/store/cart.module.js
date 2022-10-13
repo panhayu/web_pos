@@ -31,9 +31,9 @@ export const cart = {
                     id: item.id,
                     name: item.name,
                     image: item.image,
-                    price: item.price,
-                    size_id: "3b696cbc-10ef-11ed-a261-0242ac120002",
-                    size_name: 'Small',
+                    price: item.sizes[0].price,
+                    size_id: item.sizes[0].id,
+                    size_name: item.sizes[0].name,
                     quantity: 1
                 });
             }

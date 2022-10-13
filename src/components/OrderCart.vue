@@ -26,10 +26,10 @@
                     <!-- price -->
                     <div class="flex flex-col items-end justify-between">
                         <p v-if="item.price" class="text-lg text-blue font-bold">
-                            $ {{parseFloat(item.price).toFixed(2)}}
+                            {{parseFloat(item.price)}}៛
                         </p>
                         <p v-else>
-                            $ {{parseFloat(0).toFixed(2)}}
+                            {{parseFloat(0)}}៛
                         </p>
                         <!-- qty controller -->
                         <div class="flex flex-row items-center justify-between">
@@ -55,12 +55,12 @@
             <div class="w-full p-4 bg-light-gray rounded-md my-4">
                 <div class="flex flex-row justify-between">
                     <p class="text-gray font-thin">Subtotal</p>
-                    <p class="text-black font-bold">$ {{parseFloat(calulateTotal).toFixed(2)}}</p>
+                    <p class="text-black font-bold">{{parseFloat(cartTotal)}}៛</p>
                 </div>
                 <div class="border-b border-dark-gray my-2"></div>
                 <div class="flex flex-row justify-between">
                     <p class="text-black text-lg font-bold">Total</p>
-                    <p class="text-black text-lg font-bold">$ {{parseFloat(calulateTotal).toFixed(2)}}</p>
+                    <p class="text-black text-lg font-bold">{{parseFloat(cartTotal)}}៛</p>
                 </div>
             </div>
             <!-- place order button -->
@@ -74,8 +74,7 @@
         <div class="header">
             <div class="flex flex-row justify-between items-center pb-4">
                 <h1 class="text-2xl text-black font-bold">Procced Order</h1>
-                <div class="group p-2 bg-light-gray rounded-md cursor-pointer hover:bg-blue"
-                    @click="handleBack">
+                <div class="group p-2 bg-light-gray rounded-md cursor-pointer hover:bg-blue" @click="handleBack">
                     <ArrowLeftIcon class="w-6 h-6 text-gray group-hover:text-white" />
                 </div>
             </div>
@@ -124,6 +123,7 @@ import {
 } from '@headlessui/vue'
 import userService from '../services/user.service';
 import BaseTextInput from './BaseTextInput.vue';
+import { useToast } from "vue-toastification";
 export default {
     name: 'OrderCart',
     components: {
@@ -137,6 +137,10 @@ export default {
         RadioGroupOption,
         BaseTextInput,
         ArrowLeftIcon
+    },
+    setup() {
+        const toast = useToast();
+        return {toast}
     },
     data() {
         return {
@@ -190,15 +194,17 @@ export default {
                 this.itemsInCart = [];
                 this.selectedPayment = '';
                 this.$store.commit('empty');
+                this.toast.success('Order Placed Successfully');
             }).catch((error) => {
                 this.$Progress.fail()
+                this.toast.error('Something went wrong');
                 console.log(error);
             })
         },
         handlePrintReceipt() {
             this.$router.push('/print_reciept')
         },
-        handleBack() { 
+        handleBack() {
             this.proccedCheckOut = !this.proccedCheckOut;
         }
     },
@@ -209,12 +215,12 @@ export default {
         cartLength() {
             return this.$store.getters.cart.length;
         },
-        calulateTotal() {
+        cartTotal() {
             let total = 0;
-            this.itemsInCart.forEach((item, index) => {
-                total += item.price * item.qty
-            });
-            return total
+            this.itemsInCart.forEach((item) => {
+                total += item.price * item.quantity;
+            })
+            return total;
         },
         isEmptyCart() {
             if (this.itemsInCart.length == !'0') {
@@ -232,7 +238,6 @@ export default {
         },
     },
     created() {
-        this.$store.commit("cartKeys", this.cartKeys);
         this.getPayment();
     },
     mounted() {

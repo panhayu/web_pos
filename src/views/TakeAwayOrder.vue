@@ -10,7 +10,7 @@
             <!-- category cards -->
             <div class="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 my-4 py-1">
                 <template v-for="category in itemsList" :key="category.id">
-                    <div class="group px-2 py-4 bg-white rounded-lg hover:bg-light-blue cursor-pointer"
+                    <div v-if="category.items.length > 0" class="group px-2 py-4 bg-white rounded-lg hover:bg-light-blue cursor-pointer"
                         @click="goTo(category.name)">
                         <p class="text-md font-light text-gray group-hover:text-blue">{{category.name}}</p>
                     </div>
@@ -32,11 +32,8 @@
                                 <img v-else :src="defaultImage" class="rounded-t-xl object-cover square-image" alt="">
                                 <div class="px-2">
                                     <p class="text-md text-gray font-light group-hover:text-blue">{{item.name}}</p>
-                                    <p v-if="item.price" class="text-gray text-xl font-bold group-hover:text-blue">$
-                                        {{parseFloat(item.price).toFixed(2)}}
-                                    </p>
-                                    <p v-else class="text-gray text-xl font-bold group-hover:text-blue">
-                                        $ {{parseFloat(0).toFixed(2)}}
+                                    <p class="text-gray text-xl font-bold group-hover:text-blue">
+                                        {{item.sizes[0].price}}៛
                                     </p>
                                 </div>
                             </div>
@@ -62,7 +59,7 @@ export default {
     },
     methods: {
         getItemsList() {
-            this.params.set('relations', 'items')
+            this.params.set('relations', 'items.sizes')
             userService.getItemsByCategory(this.params).then((response) => {
                 this.itemsList = response.data.data
             })

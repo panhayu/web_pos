@@ -22,11 +22,11 @@
                             <td class="py-1">{{index+1}}</td>
                             <td class="py-1">{{item.name}}</td>
                             <td class="py-1 text-center">{{item.quantity}}</td>
-                            <td class="py-1 text-right">{{parseFloat(item.price).toFixed(2)}}</td>
+                            <td class="py-1 text-right">{{parseFloat(item.price)}}៛</td>
                         </tr>
                         <tr class="border-t border-dashed border-gray">
                             <td colspan="3" class="text-right py-2">Total</td>
-                            <td class="text-right py-2">{{parseFloat(calulateTotal).toFixed(2)}}</td>
+                            <td class="text-right py-2">{{parseFloat(cartTotal)}}៛</td>
                         </tr>
                     </tbody>
                 </table>
@@ -56,12 +56,12 @@ export default {
         itemsInCart() {
             return this.$store.getters.cart;
         },
-        calulateTotal() {
+        cartTotal() {
             let total = 0;
-            this.itemsInCart.forEach((item, index) => {
-                total += item.price * item.qty
-            });
-            return total
+            this.itemsInCart.forEach((item) => {
+                total += item.price * item.quantity;
+            })
+            return total;
         },
     },
     created() { },
