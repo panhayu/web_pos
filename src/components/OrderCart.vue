@@ -176,7 +176,8 @@ export default {
             let formData = new FormData();
             formData.append('note', this.note);
             formData.append('payment_id', this.selectedPayment.id);
-            formData.append('total', 3);
+            formData.append('quantity', this.itemsInCart.length);
+            formData.append('total_price', this.cartTotal);
             formData.append("order_channel_id", "3b696cbc-10ef-14ed-a261-0242ac120002");
             formData.append("order_status_id", "3b696cbc-10ef-14ed-a261-0242ac120002")
             this.itemsInCart.forEach((item, index) => {
