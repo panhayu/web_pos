@@ -26,7 +26,7 @@
                     <!-- price -->
                     <div class="flex flex-col items-end justify-between">
                         <p v-if="item.price" class="text-lg text-blue font-bold">
-                            {{parseFloat(item.price)}}៛
+                            {{Intl.NumberFormat().format(item.price)}}៛
                         </p>
                         <p v-else>
                             {{parseFloat(0)}}៛
@@ -55,12 +55,12 @@
             <div class="w-full p-4 bg-light-gray rounded-md my-4">
                 <div class="flex flex-row justify-between">
                     <p class="text-gray font-thin">Subtotal</p>
-                    <p class="text-black font-bold">{{parseFloat(cartTotal)}}៛</p>
+                    <p class="text-black font-bold">{{Intl.NumberFormat().format(cartTotal)}}៛</p>
                 </div>
                 <div class="border-b border-dark-gray my-2"></div>
                 <div class="flex flex-row justify-between">
                     <p class="text-black text-lg font-bold">Total</p>
-                    <p class="text-black text-lg font-bold">{{parseFloat(cartTotal)}}៛</p>
+                    <p class="text-black text-lg font-bold">{{Intl.NumberFormat().format(cartTotal)}}៛</p>
                 </div>
             </div>
             <!-- place order button -->

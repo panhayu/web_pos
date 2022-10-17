@@ -22,11 +22,11 @@
                             <td class="py-1">{{index+1}}</td>
                             <td class="py-1">{{item.name}}</td>
                             <td class="py-1 text-center">{{item.quantity}}</td>
-                            <td class="py-1 text-right">{{parseFloat(item.price)}}៛</td>
+                            <td class="py-1 text-right">{{Intl.NumberFormat().format(item.price)}}៛</td>
                         </tr>
                         <tr class="border-t border-dashed border-gray">
                             <td colspan="3" class="text-right py-2">Total</td>
-                            <td class="text-right py-2">{{parseFloat(cartTotal)}}៛</td>
+                            <td class="text-right py-2">{{Intl.NumberFormat().format(cartTotal)}}៛</td>
                         </tr>
                     </tbody>
                 </table>

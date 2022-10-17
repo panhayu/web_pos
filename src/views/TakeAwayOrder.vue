@@ -33,7 +33,7 @@
                                 <div class="px-2">
                                     <p class="text-md text-gray font-light group-hover:text-blue">{{item.name}}</p>
                                     <p class="text-gray text-xl font-bold group-hover:text-blue">
-                                        {{item.sizes[0].price}}៛
+                                        {{Intl.NumberFormat().format(item.sizes[0].price)}}៛
                                     </p>
                                 </div>
                             </div>
