@@ -9,10 +9,11 @@ import PrintReceipt from '../views/PrintReceipt.vue'
 const routes = [
     {
       path: '/',
-      alias: '/home',
+      alias: '/dine_in_order',
       name: 'Home',
-      component: Home,
-      meta: { requiresAuth: true, title: 'Home', layout: 'default' }
+      beforeEnter: projectedRoute,
+      component: DineInOrder,
+      meta: {requiresAuth: true, title: 'POS - Dine In Order', layout: 'default'}
     },
     {
       path: '/login',
@@ -20,13 +21,6 @@ const routes = [
       component: Login,
       meta: {requiresAuth: true, title: 'Login', layout: 'blank'}
     },
-    {
-      path: '/dine_in_order',
-      name: 'DineInOrder',
-      beforeEnter: projectedRoute,
-      component: DineInOrder,
-      meta: {requiresAuth: true, title: 'POS - Dine In Order', layout: 'default'}
-  },
   {
     path: '/take_away_order',
     name: 'TakeAwayOrder',

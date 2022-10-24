@@ -1,6 +1,6 @@
 <template>
-    <div v-if="!proccedCheckOut" class="w-full min-h-screen flex flex-col content-between sticky top-0 p-8">
-        <div class="header">
+    <div v-if="!proccedCheckOut" class="w-full min-h-screen flex flex-col content-between sticky top-0 px-8 pb-8 overflow-y-auto h-32">
+        <div class="header sticky top-0 bg-white pt-8">
             <div class="flex flex-row justify-between items-center pb-4">
                 <h1 class="text-2xl text-black font-bold">Current Order</h1>
                 <div v-show="isEmptyCart" class="group p-2 bg-light-gray rounded-md cursor-pointer hover:bg-red"
@@ -11,7 +11,7 @@
             <div class="border-b border-light-gray"></div>
         </div>
         <!-- items in cart -->
-        <div class="my-2 overflow-y-hidden">
+        <div class="my-2">
             <template v-for="item in itemsInCart" :key="item.id">
                 <div class="flex justify-between mb-4">
                     <!-- item detail -->
@@ -20,23 +20,23 @@
                             alt="" />
                         <img v-else :src="defaultImage" class=" w-16 object-cover rounded-md square-img" alt="" />
                         <div class="pl-4">
-                            <p class="font-light text-md">{{item.name}}</p>
+                            <p class="font-light text-md">{{ item.name }}</p>
                         </div>
                     </div>
                     <!-- price -->
                     <div class="flex flex-col items-end justify-between">
                         <p v-if="item.price" class="text-lg text-blue font-bold">
-                            {{Intl.NumberFormat().format(item.price)}}៛
+                            {{ Intl.NumberFormat().format(item.price) }}៛
                         </p>
                         <p v-else>
-                            {{parseFloat(0)}}៛
+                            {{ parseFloat(0) }}៛
                         </p>
                         <!-- qty controller -->
                         <div class="flex flex-row items-center justify-between">
                             <button @click="handleDecrease(item)" class="p-1 bg-blue rounded-md">
                                 <MinusIcon class="text-white w-4 h-4" />
                             </button>
-                            <p class="text-blue text-lg font-bold px-4">{{item.quantity}}</p>
+                            <p class="text-blue text-lg font-bold px-4">{{ item.quantity }}</p>
                             <button @click="handleIncrease(item)" class="p-1 bg-blue rounded-md">
                                 <PlusIcon class="text-white w-4 h-4" />
                             </button>
@@ -50,17 +50,17 @@
                 <p class="text-gray font-thin">Add to items to cart to make an order.</p>
             </div>
         </div>
-        <div class="bottom mt-auto">
+        <div class="bottom mt-auto sticky bottom-0 bg-white">
             <!-- summary card -->
             <div class="w-full p-4 bg-light-gray rounded-md my-4">
                 <div class="flex flex-row justify-between">
                     <p class="text-gray font-thin">Subtotal</p>
-                    <p class="text-black font-bold">{{Intl.NumberFormat().format(cartTotal)}}៛</p>
+                    <p class="text-black font-bold">{{ Intl.NumberFormat().format(cartTotal) }}៛</p>
                 </div>
                 <div class="border-b border-dark-gray my-2"></div>
                 <div class="flex flex-row justify-between">
                     <p class="text-black text-lg font-bold">Total</p>
-                    <p class="text-black text-lg font-bold">{{Intl.NumberFormat().format(cartTotal)}}៛</p>
+                    <p class="text-black text-lg font-bold">{{ Intl.NumberFormat().format(cartTotal) }}៛</p>
                 </div>
             </div>
             <!-- place order button -->
@@ -91,7 +91,7 @@
                     <template v-for="payment in paymentMethods" :key="payment.id">
                         <RadioGroupOption v-slot="{ checked }" :value="payment" class="w-full pr-2 pb-1 pt-1">
                             <span :class='checked ? "bg-light-blue text-blue" : "text-gray bg-light-gray"'
-                                class="block w-full text-sm font-medium p-4 rounded-lg cursor-pointer text-center select-none">{{payment.name}}</span>
+                                class="block w-full text-sm font-medium p-4 rounded-lg cursor-pointer text-center select-none">{{ payment.name }}</span>
                         </RadioGroupOption>
                     </template>
                 </RadioGroup>
@@ -140,7 +140,7 @@ export default {
     },
     setup() {
         const toast = useToast();
-        return {toast}
+        return { toast }
     },
     data() {
         return {

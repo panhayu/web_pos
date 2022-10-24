@@ -1,48 +1,66 @@
 <template>
-    <div class="w-full min-h-screen p-2 flex flex-col space-y-8 items-center justify-center sticky top-0">
-        <div>
-            <router-link to="/dine_in_order" active-class="text-blue"
-                class="flex flex-col group text-gray cursor-pointer items-center space-y-2  select-none">
-                <ArchiveBoxIcon class="w-8 h-8  group-hover:text-blue" />
-                <p class="text-sm font-light  group-hover:text-blue">
-                    Dine In
-                </p>
-            </router-link>
+    <div class="flex flex-col w-full min-h-screen px-4 py-8 bg-white sticky top-0">
+        <div class="text-center">
+            <p class="text-2xl text-gray font-bold">POS</p>
+            <div class="w-full border-b border-1 border-light-gray my-4"></div>
         </div>
-        <div>
-            <router-link to="/take_away_order" active-class="text-blue"
-                class="flex flex-col group text-gray cursor-pointer items-center space-y-2  select-none">
-                <ShoppingBagIcon class="w-8 h-8  group-hover:text-blue" />
-                <p class="text-sm font-light  group-hover:text-blue">
-                    Take Away
-                </p>
-            </router-link>
+        <div class="space-y-8">
+            <div class="text-gray">
+                <router-link to="/dine_in_order" active-class="text-blue"
+                    class="flex flex-col group cursor-pointer items-center space-y-2  select-none">
+                    <ArchiveBoxIcon class="w-8 h-8 group-hover:text-blue" />
+                    <p class="text-sm font-light group-hover:text-blue">
+                        Dine In
+                    </p>
+                </router-link>
+            </div>
+            <div class="text-gray">
+                <router-link to="/take_away_order" active-class="text-blue"
+                    class="flex flex-col group cursor-pointer items-center space-y-2  select-none">
+                    <ShoppingBagIcon class="w-8 h-8 group-hover:text-blue" />
+                    <p class="text-sm font-light  group-hover:text-blue">
+                        Take Away
+                    </p>
+                </router-link>
+            </div>
+            <div class="text-gray">
+                <router-link to="/take-away" active-class="text-blue"
+                    class="flex flex-col group cursor-pointer items-center space-y-2  select-none">
+                    <TruckIcon class="w-8 h-8 group-hover:text-blue" />
+                    <p class="text-sm font-light group-hover:text-blue">
+                        Delivery
+                    </p>
+                </router-link>
+            </div>
         </div>
-        <div>
-            <router-link to="/take-away" active-class="text-blue"
-                class="flex flex-col group text-gray cursor-pointer items-center space-y-2  select-none">
-                <TruckIcon class="w-8 h-8  group-hover:text-blue" />
-                <p class="text-sm font-light  group-hover:text-blue">
-                    Delivery
-                </p>
-            </router-link>
+        <div @click="handleLogout" class="mt-auto flex flex-col items-center cursor-pointer text-red">
+            <ArrowLeftCircleIcon class="w-8 h-8 text-red group-hover:text-red" />
+            <p class="text-sm font-light  group-hover:text-red">
+                Logout
+            </p>
         </div>
     </div>
 </template>
 
 <script>
-import { ShoppingBagIcon, TruckIcon, ArchiveBoxIcon } from '@heroicons/vue/24/outline';
+import { ShoppingBagIcon, TruckIcon, ArchiveBoxIcon, ArrowLeftCircleIcon } from '@heroicons/vue/24/outline';
 export default {
     name: 'SideBarNavigation',
     components: {
         ShoppingBagIcon,
         TruckIcon,
-        ArchiveBoxIcon
+        ArchiveBoxIcon,
+        ArrowLeftCircleIcon
     },
     data() {
         return {}
     },
-    methods: {},
+    methods: {
+        handleLogout() {
+            this.$store.dispatch('auth/logout');
+            this.$router.push('/login');
+        }
+    },
     created() { },
     mounted() { },
 }
