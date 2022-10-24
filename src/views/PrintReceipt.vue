@@ -1,6 +1,6 @@
 <template>
     <div class="p-6 min-w-min min-h-screen flex flex-col items-center bg-light-gray rounded-2xl">
-        <div class="ticket bg-white rounded-md w-64 max-w-64 p-4">
+        <div class="ticket w-64 max-w-64 bg-white rounded-md px-2 py-4">
             <div class="flex flex-col space-y-2">
                 <img class="w-1/6" :src="logo" alt="" />
                 <div class="w-full flex flex-col justify-center">
@@ -19,14 +19,14 @@
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in itemsInCart" :key="item.id">
-                            <td class="py-1">{{index+1}}</td>
-                            <td class="py-1">{{item.name}}</td>
-                            <td class="py-1 text-center">{{item.quantity}}</td>
-                            <td class="py-1 text-right">{{Intl.NumberFormat().format(item.price)}}៛</td>
+                            <td class="py-1">{{ index + 1 }}</td>
+                            <td class="py-1">{{ item.name }}</td>
+                            <td class="py-1 text-center">{{ item.quantity }}</td>
+                            <td class="py-1 text-right">{{ Intl.NumberFormat().format(item.price) }}៛</td>
                         </tr>
                         <tr class="border-t border-dashed border-gray">
                             <td colspan="3" class="text-right py-2">Total</td>
-                            <td class="text-right py-2">{{Intl.NumberFormat().format(cartTotal)}}៛</td>
+                            <td class="text-right py-2">{{ Intl.NumberFormat().format(cartTotal) }}៛</td>
                         </tr>
                     </tbody>
                 </table>
