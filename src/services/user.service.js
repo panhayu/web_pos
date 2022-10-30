@@ -7,8 +7,8 @@ class UserService {
 
     // get methods
 
-    getAllItems() {
-        return axios.get(API_URL + 'items', {headers: authHeader()})
+    getAllItems(params) {
+        return axios.get(API_URL + 'items', {params: params,headers: authHeader()})
     }
 
     getItemsByCategory(params) {
@@ -21,6 +21,10 @@ class UserService {
 
     getPaymentMethods() { 
         return axios.get(API_URL + 'payments', {headers: authHeader()})
+    }
+
+    getCategory(params) {
+        return axios.get(API_URL + 'categories', {params: params, headers: authHeader()})
     }
 
     // post methods
