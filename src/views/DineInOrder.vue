@@ -11,15 +11,6 @@
                 </div>
                 <p v-else class="text-md text-gray font-light">Selecte or Choose Table for Dine-In Order</p>
             </div>
-            <!-- category cards -->
-            <div v-show="selectedTable"
-                class="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 my-4 py-1">
-                <template v-for="category in itemsList" :key="category.id">
-                    <div class="group px-2 py-4 bg-white rounded-lg hover:bg-light-blue cursor-pointer">
-                        <p class="text-md font-light text-gray group-hover:text-blue">{{ category.name }}</p>
-                    </div>
-                </template>
-            </div>
         </div>
         <!-- show table list -->
         <div v-if="!selectedTable" class="p-8 grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
@@ -33,47 +24,25 @@
             </template>
         </div>
         <!-- show item list upone table selected -->
-        <div v-else class="p-8 space-y-8">
-            <template v-for="category in itemsList" :key="category.id">
-                <div :id="category.name" :ref="category.name">
-                    <p class="text-xl text-gray font-light mb-6">{{ category.name }}</p>
-                    <!-- item cards -->
-                    <div class="grid xl:grid-cols-7 lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
-                        <template v-for="item in category.items" :key="item.id">
-                            <BaseItemCard :item="item" :itemSize="item.sizes" />
-                        </template>
-                    </div>
-                </div>
-            </template>
-        </div>
+        <ItemsList v-else />
     </div>
 </template>
 
 <script>
 import userService from '../services/user.service';
-import BaseItemCard from '../components/BaseItemCard.vue';
-
+import ItemsList from '../components/ItemsList.vue';
 export default {
     name: 'DineInOrder',
     components: {
-        BaseItemCard,
+        ItemsList,
     },
     data() {
         return {
-            params: new URLSearchParams(),
-            defaultImage: 'https://theme-assets.getbento.com/sensei/5a38345.sensei/assets/images/catering-item-placeholder-704x520.png',
             tableList: [],
             selectedTable: '',
-            itemsList: [],
         }
     },
     methods: {
-        getItemsList() {
-            this.params.set('relations', 'items.sizes')
-            userService.getItemsByCategory(this.params).then((response) => {
-                this.itemsList = response.data.data
-            })
-        },
         getTableList() {
             userService.getDineInTables().then((response) => {
                 this.tableList = response.data.data
@@ -86,7 +55,6 @@ export default {
     created() {
         this.$Progress.start();
         this.getTableList();
-        this.getItemsList();
     },
     mounted() {
         this.$Progress.finish();

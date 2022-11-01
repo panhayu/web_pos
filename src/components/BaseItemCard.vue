@@ -1,9 +1,11 @@
 <template>
-    <div @click="handleAddToCart(item)" class="group bg-white rounded-md pb-2 cursor-pointer select-none">
+    <div v-if="itemSize.length > 0" @click="handleAddToCart(item)" class="group bg-white rounded-md pb-2 cursor-pointer select-none">
         <img v-if="item.image" :src="item.image" class="rounded-t-lg object-cover square-image" alt="">
         <img v-else :src="defaultImage" class="rounded-t-lg object-cover square-image" alt="">
-        <div class="px-2">
-            <p class="text-md text-gray font-light group-hover:text-blue">{{ item.name }}</p>
+        <div class="px-2 py-1">
+            <p class="text-md text-gray font-light truncate group-hover:text-blue">
+                {{ item.name }}
+            </p>
             <p class="text-gray text-md font-bold group-hover:text-blue">
                 {{ Intl.NumberFormat().format(itemSize[0].price) }}៛
             </p>
@@ -21,7 +23,8 @@ export default {
         },
         itemSize: {
             type: Object,
-            required: true,
+            // required: true,
+            default: '',
         },
         defaultImage: {
             type: String,
