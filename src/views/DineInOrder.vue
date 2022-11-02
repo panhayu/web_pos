@@ -1,6 +1,6 @@
 <template>
     <div class="space-y-8">
-        <div class="sticky p-8 pb-0 top-0 backdrop-blur-lg  w-full">
+        <div class="p-8 pb-0 backdrop-blur-lg  w-full">
             <div>
                 <h1 class="text-2xl font-bold">Dine-In Order</h1>
                 <div v-if="selectedTable" class="flex flex-row items-center space-x-2">
@@ -46,6 +46,7 @@ export default {
         getTableList() {
             userService.getDineInTables().then((response) => {
                 this.tableList = response.data.data
+                localStorage.setItem('tableList', JSON.stringify(this.tableList))
             })
         },
         handleSelect(value) {
@@ -54,6 +55,9 @@ export default {
     },
     created() {
         this.$Progress.start();
+        if (localStorage.getItem('tableList')) {
+            this.tableList = JSON.parse(localStorage.getItem('tableList'))
+        }
         this.getTableList();
     },
     mounted() {
