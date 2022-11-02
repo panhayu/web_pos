@@ -57,6 +57,7 @@ export default {
         this.getTableList();
     },
     mounted() {
+        this.$store.commit("updateOrderType", "dine-in");
         this.$Progress.finish();
     }
 }

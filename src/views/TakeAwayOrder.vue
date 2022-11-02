@@ -23,6 +23,7 @@ export default {
         this.$Progress.start();
     },
     mounted() {
+        this.$store.commit("updateOrderType", "take-away");
         this.$Progress.finish();
     }
 }
