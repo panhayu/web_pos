@@ -69,7 +69,7 @@ export default {
             });
         },
         getCategoryList() {
-            this.params.set('relations', 'items')
+            this.params.set('relations', 'items.sizes')
             userService.getCategory(this.params).then((response) => {
                 this.categoryList = response.data.data;
                 localStorage.setItem('categoryList', JSON.stringify(this.categoryList))
