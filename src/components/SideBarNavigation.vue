@@ -24,7 +24,7 @@
                 </router-link>
             </div>
             <div class="text-gray">
-                <router-link to="/take-away" active-class="text-blue"
+                <router-link to="/delivery_order" active-class="text-blue"
                     class="flex flex-col group cursor-pointer items-center space-y-2  select-none">
                     <TruckIcon class="w-8 h-8 group-hover:text-blue" />
                     <p class="text-sm font-light group-hover:text-blue">

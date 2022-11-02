@@ -1,5 +1,6 @@
 <template>
-    <div v-if="!proccedCheckOut" class="w-full min-h-screen flex flex-col content-between sticky top-0 px-8 pb-8 overflow-y-auto h-32">
+    <div v-if="!proccedCheckOut"
+        class="w-full min-h-screen flex flex-col content-between sticky top-0 px-8 pb-8 overflow-y-auto h-32">
         <div class="header sticky top-0 bg-white pt-8">
             <div class="flex flex-row justify-between items-center pb-4">
                 <h1 class="text-2xl text-black font-bold">Current Order</h1>
@@ -82,6 +83,12 @@
         </div>
         <div>
             <BaseTextInput v-model="note" name="note" label="Order Note" class="w-full my-4" />
+            <!-- input field for delivery order -->
+            <div v-show="isDelivery">
+                <BaseTextInput v-model="name" name="name" label="Name" class="w-full my-4" />
+                <BaseTextInput v-model="phone" name="phone" label="Contact Number" class="w-full my-4" />
+                <BaseTextInput v-model="address" name="address" label="Address" class="w-full my-4" />
+            </div>
             <!-- payment method card -->
             <div class="payment my-4">
                 <p class="text-md text-gray font-light">
@@ -91,7 +98,9 @@
                     <template v-for="payment in paymentMethods" :key="payment.id">
                         <RadioGroupOption v-slot="{ checked }" :value="payment" class="w-full pr-2 pb-1 pt-1">
                             <span :class='checked ? "bg-light-blue text-blue" : "text-gray bg-light-gray"'
-                                class="block w-full text-sm font-medium p-4 rounded-lg cursor-pointer text-center select-none">{{ payment.name }}</span>
+                                class="block w-full text-sm font-medium p-4 rounded-lg cursor-pointer text-center select-none">{{
+                                        payment.name
+                                }}</span>
                         </RadioGroupOption>
                     </template>
                 </RadioGroup>
@@ -150,6 +159,9 @@ export default {
             total: 0,
             proccedCheckOut: false,
             note: '',
+            name: '',
+            phone: '',
+            address: '',
         }
     },
     methods: {
@@ -160,6 +172,7 @@ export default {
         getPayment() {
             userService.getPaymentMethods().then((response) => {
                 this.paymentMethods = response.data.data;
+                localStorage.setItem('paymentMethods', JSON.stringify(response.data.data));
             })
         },
         handlePlaceOrder() {
@@ -178,7 +191,14 @@ export default {
             formData.append('payment_id', this.selectedPayment.id);
             formData.append('quantity', this.itemsInCart.length);
             formData.append('total_price', this.cartTotal);
-            formData.append("order_channel_id", "3b696cbc-10ef-14ed-a261-0242ac120002");
+            if (this.isDelivery) {
+                formData.append('customer[name]', this.name);
+                formData.append('customer[phone]', this.phone);
+                formData.append('customer[address]', this.address);
+                formData.append("order_channel_id", "3b696cbc-10ef-11ed-a261-0242ac120002");
+            } else {
+                formData.append("order_channel_id", "3b696cbc-10ef-14ed-a261-0242ac120002");
+            }
             formData.append("order_status_id", "3b696cbc-10ef-14ed-a261-0242ac120002")
             this.itemsInCart.forEach((item, index) => {
                 formData.append(`items[${index}][item_id]`, item.id);
@@ -210,6 +230,14 @@ export default {
         }
     },
     computed: {
+        // get order type from store return true if delivery
+        isDelivery() {
+            if (this.$store.state.orderType.orderType == 'delivery') {
+                return true;
+            } else {
+                return false;
+            }
+        },
         itemsInCart() {
             return this.$store.getters.cart;
         },
@@ -239,6 +267,10 @@ export default {
         },
     },
     created() {
+        // get payment method from local storage if not get from api
+        if (localStorage.getItem('paymentMethods')) {
+            this.paymentMethods = JSON.parse(localStorage.getItem('paymentMethods'));
+        }
         this.getPayment();
     },
     mounted() {
