@@ -1,5 +1,5 @@
 <template>
-    <VOffline @detected-condition="handleConnectivityChange">
+    <VOffline class="h-full" @detected-condition="handleConnectivityChange">
         <div v-if="!proccedCheckOut"
             class="w-full min-h-screen flex flex-col content-between sticky top-0 px-8 pb-8 overflow-y-auto h-32">
             <div class="header sticky top-0 bg-white pt-8">
@@ -190,7 +190,6 @@ export default {
             this.$store.commit('addToCart', item)
         },
         handleCheckOut() {
-            this.$Progress.start()
             let formData = new FormData();
             formData.append('note', this.note);
             formData.append('payment_id', this.selectedPayment.id);
@@ -214,18 +213,41 @@ export default {
                 formData.append(`items[${index}][price]`, item.price);
             })
 
-            userService.storeOrder(formData).then((response) => {
-                this.$Progress.finish()
+            if (this.online == true) {
+                this.$Progress.start()
+                userService.storeOrder(formData).then((response) => {
+                    this.$Progress.finish()
+                    this.proccedCheckOut = false;
+                    this.itemsInCart = [];
+                    this.selectedPayment = [];
+                    this.$store.commit('empty');
+                    this.toast.success('Order Placed Successfully');
+                }).catch((error) => {
+                    this.$Progress.fail()
+                    this.toast.error(error.response.data.message)
+                })
+            } else {
+                var object = {};
+                formData.forEach(function (value, key) {
+                    object[key] = value;
+                });
+                // var localOrder = [];
+                // localOrder.push(object);
+                // console.log(localOrder);
+                var oldData = JSON.parse(localStorage.getItem('orders')) || [];
+                console.log("oldData");
+                console.log(oldData);
+
+                oldData.push(object);
+                console.log("oldData add new data");
+                console.log(oldData);
+                localStorage.setItem('orders', JSON.stringify(oldData));
                 this.proccedCheckOut = false;
                 this.itemsInCart = [];
-                this.selectedPayment = '';
+                this.selectedPayment = [];
                 this.$store.commit('empty');
-                this.toast.success('Order Placed Successfully');
-            }).catch((error) => {
-                this.$Progress.fail()
-                this.toast.error('Something went wrong');
-                console.log(error);
-            })
+                this.toast.info('Order saved offline');
+            }
         },
         handlePrintReceipt() {
             this.$router.push('/print_reciept')
