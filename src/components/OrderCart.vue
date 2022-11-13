@@ -100,7 +100,7 @@
                             <RadioGroupOption v-slot="{ checked }" :value="payment" class="w-full pr-2 pb-1 pt-1">
                                 <span :class='checked ? "bg-light-blue text-blue" : "text-gray bg-light-gray"'
                                     class="block w-full text-sm font-medium p-4 rounded-lg cursor-pointer text-center select-none">{{
-                                            payment.name
+                                    payment.name
                                     }}</span>
                             </RadioGroupOption>
                         </template>
@@ -190,31 +190,36 @@ export default {
             this.$store.commit('addToCart', item)
         },
         handleCheckOut() {
-            let formData = new FormData();
-            formData.append('note', this.note);
-            formData.append('payment_id', this.selectedPayment.id);
-            formData.append('quantity', this.itemsInCart.length);
-            formData.append('total_price', this.cartTotal);
-            if (this.isDelivery) {
-                formData.append('customer[name]', this.name);
-                formData.append('customer[phone]', this.phone);
-                formData.append('customer[address]', this.address);
-                formData.append("order_channel_id", "3b696cbc-10ef-11ed-a261-0242ac120002");
-            } else {
-                formData.append("order_channel_id", "3b696cbc-10ef-14ed-a261-0242ac120002");
-            }
-            formData.append("order_status_id", "3b696cbc-10ef-14ed-a261-0242ac120002")
-            this.itemsInCart.forEach((item, index) => {
-                formData.append(`items[${index}][item_id]`, item.id);
-                formData.append(`items[${index}][item_name]`, item.name);
-                formData.append(`items[${index}][size_id]`, item.size_id);
-                formData.append(`items[${index}][size_name]`, item.size_name);
-                formData.append(`items[${index}][quantity]`, item.quantity);
-                formData.append(`items[${index}][price]`, item.price);
-            })
-
             if (this.online == true) {
-                this.$Progress.start()
+                this.handleSaveOrder();
+            } else {
+                this.handleSaveOrderToLocal();
+            }
+        },
+        handleSaveOrder() {
+            this.$Progress.start()
+                let formData = new FormData();
+                formData.append('note', this.note);
+                formData.append('payment_id', this.selectedPayment.id);
+                formData.append('quantity', this.itemsInCart.length);
+                formData.append('total_price', this.cartTotal);
+                if (this.isDelivery) {
+                    formData.append('customer[name]', this.name);
+                    formData.append('customer[phone]', this.phone);
+                    formData.append('customer[address]', this.address);
+                    formData.append("order_channel_id", "3b696cbc-10ef-11ed-a261-0242ac120002");
+                } else {
+                    formData.append("order_channel_id", "3b696cbc-10ef-14ed-a261-0242ac120002");
+                }
+                formData.append("order_status_id", "3b696cbc-10ef-14ed-a261-0242ac120002")
+                this.itemsInCart.forEach((item, index) => {
+                    formData.append(`items[${index}][item_id]`, item.id);
+                    formData.append(`items[${index}][item_name]`, item.name);
+                    formData.append(`items[${index}][size_id]`, item.size_id);
+                    formData.append(`items[${index}][size_name]`, item.size_name);
+                    formData.append(`items[${index}][quantity]`, item.quantity);
+                    formData.append(`items[${index}][price]`, item.price);
+                })
                 userService.storeOrder(formData).then((response) => {
                     this.$Progress.finish()
                     this.proccedCheckOut = false;
@@ -226,28 +231,24 @@ export default {
                     this.$Progress.fail()
                     this.toast.error(error.response.data.message)
                 })
-            } else {
-                var object = {};
-                formData.forEach(function (value, key) {
-                    object[key] = value;
-                });
-                // var localOrder = [];
-                // localOrder.push(object);
-                // console.log(localOrder);
-                var oldData = JSON.parse(localStorage.getItem('orders')) || [];
-                console.log("oldData");
-                console.log(oldData);
-
-                oldData.push(object);
-                console.log("oldData add new data");
-                console.log(oldData);
-                localStorage.setItem('orders', JSON.stringify(oldData));
-                this.proccedCheckOut = false;
-                this.itemsInCart = [];
-                this.selectedPayment = [];
-                this.$store.commit('empty');
-                this.toast.info('Order saved offline');
-            }
+        },
+        async handleSaveOrderToLocal() {
+            var localOrder = JSON.parse(localStorage.getItem('orders')) || [];
+            localOrder.push(
+                {
+                    note: this.note,
+                    payment_id: this.selectedPayment.id,
+                    quantity: this.itemsInCart.length,
+                    total_price: this.cartTotal,
+                    items: this.itemsInCart
+                }
+            );
+            await localStorage.setItem('orders', JSON.stringify(localOrder));
+            this.proccedCheckOut = false;
+            this.itemsInCart = [];
+            this.selectedPayment = [];
+            this.$store.commit('empty');
+            this.toast.info('Order saved offline');
         },
         handlePrintReceipt() {
             this.$router.push('/print_reciept')
