@@ -9,6 +9,7 @@ import "vue-toastification/dist/index.css";
 
 import Default from './layouts/Default.vue'
 import Blank from './layouts/Blank.vue'
+import SideBarOnly from './layouts/SideBarOnly.vue'
 
 // configuration for vue3-progressbar
 const options = {
@@ -45,6 +46,7 @@ const app = createApp(App)
 
 app.component('default-layout', Default)
 app.component('blank-layout', Blank)
+app.component('sidebar-layout', SideBarOnly)
 
 app.use(router)
 app.use(store)
