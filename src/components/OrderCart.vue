@@ -166,7 +166,6 @@ export default {
             name: '',
             phone: '',
             address: '',
-            online: true
         }
     },
     methods: {
@@ -190,7 +189,7 @@ export default {
             this.$store.commit('addToCart', item)
         },
         handleCheckOut() {
-            if (this.online == true) {
+            if (this.isOnline == true) {
                 this.handleSaveOrder();
             } else {
                 this.handleSaveOrderToLocal();
@@ -256,10 +255,6 @@ export default {
         handleBack() {
             this.proccedCheckOut = !this.proccedCheckOut;
         },
-        handleConnectivityChange(status) {
-            this.online = status;
-        },
-
     },
     computed: {
         // get order type from store return true if delivery
@@ -297,6 +292,9 @@ export default {
                 return true
             }
         },
+        isOnline() {
+            return this.$store.getters.onlineStatus;
+        },
     },
     created() {
         // get payment method from local storage if not get from api
@@ -304,16 +302,6 @@ export default {
             this.paymentMethods = JSON.parse(localStorage.getItem('paymentMethods'));
         }
         this.getPayment();
-    },
-    watch: {
-        // toast notification when online is false
-        online(value) {
-            if (value == false) {
-                this.toast.error('You are offline');
-            } else {
-                this.toast.success('You are online');
-            }
-        }
     },
     mounted() {
     },
