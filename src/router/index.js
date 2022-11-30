@@ -5,6 +5,7 @@ import DineInOrder from '../views/DineInOrder.vue'
 import TakeAwayOrder from '../views/TakeAwayOrder.vue'
 import PrintReceipt from '../views/PrintReceipt.vue'
 import DeliveryOrder from '../views/DeliveryOrder.vue'
+import ViewOrder from '../views/ViewOrder.vue'
 
 const routes = [
     {
@@ -41,6 +42,13 @@ const routes = [
     beforeEnter: protectedRoute,
     component: DeliveryOrder,
     meta: {requiresAuth: true, title: 'POS - Delivery Order', layout: 'default'}
+  },
+  {
+    path: '/order',
+    name: 'ViewOrder',
+    beforeEnter: protectedRoute,
+    component: ViewOrder,
+    meta: { requiresAuth: true, title: 'POS - View Order', layout: 'sidebar' }
   }
 ]
 
