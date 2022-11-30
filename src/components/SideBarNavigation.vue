@@ -5,32 +5,36 @@
             <div class="w-full border-b border-1 border-light-gray my-4"></div>
         </div>
         <div class="space-y-8">
-            <div class="text-gray">
-                <router-link to="/dine_in_order" active-class="text-blue"
-                    class="flex flex-col group cursor-pointer items-center space-y-2  select-none">
-                    <ArchiveBoxIcon class="w-8 h-8 group-hover:text-blue" />
-                    <p class="text-sm font-light group-hover:text-blue">
-                        Dine In
-                    </p>
-                </router-link>
-            </div>
-            <div class="text-gray">
-                <router-link to="/take_away_order" active-class="text-blue"
-                    class="flex flex-col group cursor-pointer items-center space-y-2  select-none">
-                    <ShoppingBagIcon class="w-8 h-8 group-hover:text-blue" />
-                    <p class="text-sm font-light  group-hover:text-blue">
-                        Take Away
-                    </p>
-                </router-link>
-            </div>
-            <div class="text-gray">
-                <router-link to="/delivery_order" active-class="text-blue"
-                    class="flex flex-col group cursor-pointer items-center space-y-2  select-none">
-                    <TruckIcon class="w-8 h-8 group-hover:text-blue" />
-                    <p class="text-sm font-light group-hover:text-blue">
-                        Delivery
-                    </p>
-                </router-link>
+            <div v-for="channel in orderChannel" :key="channel.id">
+                <div v-if="channel.is_active === 1" class="text-gray">
+                    <div v-if="channel.name === 'Dine-in'">
+                        <router-link to="/dine_in_order" active-class="text-blue"
+                            class="flex flex-col group cursor-pointer items-center space-y-2  select-none">
+                            <ArchiveBoxIcon class="w-8 h-8 group-hover:text-blue" />
+                            <p class="text-sm font-light group-hover:text-blue">
+                                Dine In
+                            </p>
+                        </router-link>
+                    </div>
+                    <div v-if="channel.name === 'Takeaway'">
+                        <router-link to="/take_away_order" active-class="text-blue"
+                            class="flex flex-col group cursor-pointer items-center space-y-2  select-none">
+                            <ShoppingBagIcon class="w-8 h-8 group-hover:text-blue" />
+                            <p class="text-sm font-light  group-hover:text-blue">
+                                Take Away
+                            </p>
+                        </router-link>
+                    </div>
+                    <div v-if="channel.name === 'Delivery'">
+                        <router-link to="/delivery_order" active-class="text-blue"
+                            class="flex flex-col group cursor-pointer items-center space-y-2  select-none">
+                            <TruckIcon class="w-8 h-8 group-hover:text-blue" />
+                            <p class="text-sm font-light group-hover:text-blue">
+                                Delivery
+                            </p>
+                        </router-link>
+                    </div>
+                </div>
             </div>
             <div class="text-gray">
                 <router-link to="/order" active-class="text-blue"
@@ -58,6 +62,7 @@
 
 <script>
 import { ShoppingBagIcon, TruckIcon, ArchiveBoxIcon, ArrowLeftCircleIcon, ClipboardIcon, SignalSlashIcon } from '@heroicons/vue/24/outline';
+import userService from '../services/user.service';
 export default {
     name: 'SideBarNavigation',
     components: {
@@ -69,7 +74,9 @@ export default {
         SignalSlashIcon
     },
     data() {
-        return {}
+        return {
+            orderChannel: [],
+        }
     },
     computed: {
         isOnline() {
@@ -80,9 +87,18 @@ export default {
         handleLogout() {
             this.$store.dispatch('auth/logout');
             this.$router.push('/login');
+        },
+        getOrderChannel() {
+            userService.getOrderChannel().then((response) => {
+                this.orderChannel = response.data.data;
+                localStorage.setItem('orderChannel', JSON.stringify(this.orderChannel));
+            });
         }
     },
-    created() { },
+    created() {
+        this.getOrderChannel();
+        this.orderChannel = JSON.parse(localStorage.getItem('orderChannel'));
+    },
     mounted() { },
 }
 </script>

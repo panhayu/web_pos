@@ -27,6 +27,10 @@ class UserService {
         return axios.get(API_URL + 'categories', {params: params, headers: authHeader()})
     }
 
+    getOrderChannel() {
+        return axios.get(API_URL + 'channels', {headers: authHeader()})
+    }
+
     // post methods
     storeOrder(formData) {
         return axios.post(API_URL + 'orders', formData, {headers: authHeader()})
